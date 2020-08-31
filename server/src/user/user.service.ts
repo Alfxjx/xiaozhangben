@@ -56,6 +56,11 @@ export class UserService {
     return this.buildUserRO(res);
   }
 
+  async findById(id: string): Promise<UserRO> {
+    let res = await this.userModel.findOne({ _id: id });
+    return this.buildUserRO(res);
+  }
+
   async delete(id){
     let res =  await this.userModel.findByIdAndRemove(id);
     return res;
