@@ -12,3 +12,13 @@ enum porn {
     income = 'income',
     expense = 'expense'
 }
+
+export interface LedgeInput {
+    price: number;
+    porn: porn;
+    userId: string;
+    description: string;
+    tag: string;
+    category: string;
+    star: boolean;
+}
