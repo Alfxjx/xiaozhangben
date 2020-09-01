@@ -10,6 +10,7 @@ import {
   Query,
   Param,
   Delete,
+  Logger
 } from '@nestjs/common';
 import { LedgeService } from './ledge.service';
 import { CreateLedgeDTO } from './dto/create-ledge.dto';
@@ -21,6 +22,8 @@ import { ValidateObjectId } from "../shared/validate-object-id.pipes";
 export class LedgeController {
   constructor(private readonly ledgeService: LedgeService) { }
 
+  private readonly logger = new Logger();
+
   @Get('list')
   async getLedgeList(@Res() res) {
     const list = await this.ledgeService.getLedgeList();
@@ -30,6 +33,38 @@ export class LedgeController {
       message: 'get Ledge List Ok',
       data: list,
     });
+  }
+
+  @Get('group/:id')
+  async getLedgeByGroupId(@Res() response, @Param() param){
+    const data = await this.ledgeService.getLedgeById(param.id);
+    if (!data) {
+      throw new HttpException('fail to get group ledge', HttpStatus.FORBIDDEN);
+    }
+    if (data.length === 0) {
+      throw new HttpException('no ledge for this group!', HttpStatus.NOT_FOUND)
+    }
+    return response.status(HttpStatus.OK).json({
+      status: 1,
+      message: 'group ledge get successfully!',
+      data: data
+    })
+  }
+
+  @Get('user/:id')
+  async getLedgeByUserId(@Res() response, @Param() param){
+    const data = await this.ledgeService.getLedgeByUserId(param.id);
+    if (!data) {
+      throw new HttpException('fail to get group ledge', HttpStatus.FORBIDDEN);
+    }
+    if (data.length === 0) {
+      throw new HttpException('no ledge for this group!', HttpStatus.NOT_FOUND)
+    }
+    return response.status(HttpStatus.OK).json({
+      status: 1,
+      message: 'user ledge get successfully!',
+      data: data
+    })
   }
 
   @Get(':id')

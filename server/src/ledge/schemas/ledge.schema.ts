@@ -11,6 +11,7 @@ export const LedgeSchema = new mongoose.Schema({
     },
     // 记录人
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'UserSchema' },
+    groupId: { type: mongoose.Schema.Types.ObjectId, ref: 'GroupSchema' },
     // 描述
     description: String,
     // 标签

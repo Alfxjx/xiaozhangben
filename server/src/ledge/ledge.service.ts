@@ -15,6 +15,14 @@ export class LedgeService {
     return this.ledgeModel.find().exec();
   }
 
+  async getLedgeByGroupId(id){
+    return this.ledgeModel.find({ groupId: id })
+  }
+
+  async getLedgeByUserId(id){
+    return this.ledgeModel.find({ userId: id })
+  }
+
   async getLedgeById(id) {
     return this.ledgeModel.find({ _id: id })
   }
@@ -33,7 +41,8 @@ export class LedgeService {
       description: ledgeDTO.description,
       category: ledgeDTO.category,
       star: ledgeDTO.star,
-      userId: ledgeDTO.userId
+      userId: ledgeDTO.userId,
+      groupId: ledgeDTO.groupId
     };
     const newLedge = await this.ledgeModel(inputData);
     return newLedge.save();

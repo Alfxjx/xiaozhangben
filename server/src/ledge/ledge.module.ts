@@ -16,8 +16,11 @@ import { UserModule } from "../user/user.module";
   controllers: [LedgeController],
   providers: [LedgeService]
 })
-export class LedgeModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('*')
-  }
-}
+
+// export class LedgeModule implements NestModule {
+//   public configure(consumer: MiddlewareConsumer) {
+//     consumer.apply(AuthMiddleware).forRoutes('*')
+//   }
+// }
+
+export class LedgeModule{}

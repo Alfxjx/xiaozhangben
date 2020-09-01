@@ -2,6 +2,7 @@ export interface Ledge {
     price: number;
     porn: porn;
     userId: string;
+    groupId?: string;
     description: string;
     tag: string[];
     category: string;
@@ -17,6 +18,7 @@ export interface LedgeInput {
     price: number;
     porn: porn;
     userId: string;
+    groupId?: string;
     description: string;
     tag: string;
     category: string;
