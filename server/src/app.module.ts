@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 import { LedgeModule } from './ledge/ledge.module';
 import { GroupModule } from './group/group.module';
+import { PictureModule } from "./picture/picture.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GroupModule } from './group/group.module';
     UserModule,
     LedgeModule,
     GroupModule,
+    PictureModule,
   ],
   controllers: [AppController],
   providers: [AppService],
