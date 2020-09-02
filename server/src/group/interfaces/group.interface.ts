@@ -1,9 +1,11 @@
 export interface Group {
-    name: string;
+    groupname: string;
     list: string[];
 }
 
 export interface CreateGroupInput {
-    name: string;
+    groupname: string;
     list: string;
 }
+
+export type HandleUserType = { groupId: string, userId: string }

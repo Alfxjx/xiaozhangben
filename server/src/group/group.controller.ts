@@ -1,6 +1,6 @@
-import { Controller, Logger, Get, Post, Delete, Put, HttpException, HttpStatus, Res, Body } from '@nestjs/common';
+import { Controller, Logger, Get, Post, Delete, Put, HttpException, HttpStatus, Res, Body, Param, Query } from '@nestjs/common';
 import { GroupService } from "./group.service";
-import { Group, CreateGroupInput } from './interfaces/group.interface';
+import { Group, CreateGroupInput, HandleUserType } from './interfaces/group.interface';
 import { ValidateObjectId } from "../shared/validate-object-id.pipes";
 import { CreateGroupDTO } from './dto/create-group.dto';
 
@@ -20,16 +20,24 @@ export class GroupController {
         })
     }
 
-    // TODO
     @Get(':id')
-    async getGroupById() { }
+    async getGroupById(@Res() response, @Param() params) {
+        const group = await this.groupService.getGroupById(params.id);
+        if (!group) throw new HttpException('fail to get one group by id', HttpStatus.FORBIDDEN);
+        return response.status(HttpStatus.OK).json({
+            status: 1,
+            message: 'get group successfully!',
+            data: group
+        })
+    }
 
     @Post()
     async createGroup(@Res() response, @Body() group: CreateGroupInput) {
         let groupIn = {
-            name: group.name,
+            groupname: group.groupname,
             list: group.list.split(',')
         }
+        // this.logger.log(groupIn)
         const res = await this.groupService.createGroup(groupIn);
         if (!res) throw new HttpException('create failed', HttpStatus.FORBIDDEN);
         return response.status(HttpStatus.OK).json({
@@ -40,11 +48,35 @@ export class GroupController {
     }
 
     @Post('add')
-    async addUserToGroup() { }
+    async addUserToGroup(@Res() response, @Body() addBody: HandleUserType) {
+        const addRes = await this.groupService.addUserToGroup(addBody);
+        if (!addRes) throw new HttpException('add user failed', HttpStatus.FORBIDDEN);
+        return response.status(HttpStatus.OK).json({
+            status: 1,
+            message: 'add user to group successfully!',
+            data: addRes
+        })
+    }
 
-    @Put('remove')
-    async removeUserfromGroup() { }
+    @Post('remove')
+    async removeUserfromGroup(@Res() response, @Body() rmBody: HandleUserType) {
+        const rmRes = await this.groupService.removeUserFromGroup(rmBody);
+        if (!rmRes) throw new HttpException('rm user failed', HttpStatus.FORBIDDEN);
+        return response.status(HttpStatus.OK).json({
+            status: 1,
+            message: 'remove user to group successfully!',
+            data: rmRes
+        })
+    }
 
     @Delete()
-    async deleteGroup() { }
+    async deleteGroup(@Res() response, @Query('id', new ValidateObjectId()) id) {
+        let delRes = await this.groupService.deleteGroupById(id);
+        if (!delRes) throw new HttpException('fail to delete group', HttpStatus.FORBIDDEN);
+        return response.status(HttpStatus.OK).json({
+            status: 1,
+            message: 'delete group successfully!',
+            data: delRes
+        })
+    }
 }

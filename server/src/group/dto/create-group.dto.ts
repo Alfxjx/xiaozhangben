@@ -1,4 +1,4 @@
 export class CreateGroupDTO {
-    name: string;
+    groupname: string;
     list: string[];
 }
