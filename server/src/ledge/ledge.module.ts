@@ -6,15 +6,24 @@ import {
 } from '@nestjs/common';
 import { LedgeController } from './ledge.controller';
 import { LedgeService } from './ledge.service';
+import { StatService } from "./stat.service";
 import { MongooseModule } from '@nestjs/mongoose';
 import { LedgeSchema } from "./schemas/ledge.schema";
+import { UserStatSchema, GroupStatSchema } from "./schemas/stat.schema";
 import { AuthMiddleware } from "../shared/auth.middleware";
 import { UserModule } from "../user/user.module";
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'Ledge', schema: LedgeSchema }]), UserModule],
+  imports: [
+    MongooseModule.forFeature([
+      { name: 'Ledge', schema: LedgeSchema },
+      { name: 'UserStat', schema: UserStatSchema },
+      { name: 'GroupStat', schema: GroupStatSchema }
+    ]),
+    UserModule
+  ],
   controllers: [LedgeController],
-  providers: [LedgeService]
+  providers: [LedgeService, StatService]
 })
 
 // export class LedgeModule implements NestModule {
@@ -23,4 +32,4 @@ import { UserModule } from "../user/user.module";
 //   }
 // }
 
-export class LedgeModule{}
+export class LedgeModule { }
