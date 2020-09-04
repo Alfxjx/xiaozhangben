@@ -18,8 +18,15 @@ export const LedgeSchema = new mongoose.Schema({
     tag: [String],
     // 分类
     category: String,
+    // 来源
+    source: {
+        type: String,
+        enum: ['zfb', 'wx', 'bank', 'cash', 'credit', 'stock', 'fund']
+    },
     // 收藏
     star: Boolean,
+    // 创建时间
+    date: String
 
 
 });

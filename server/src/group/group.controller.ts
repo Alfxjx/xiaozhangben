@@ -3,10 +3,14 @@ import { GroupService } from "./group.service";
 import { Group, CreateGroupInput, HandleUserType } from './interfaces/group.interface';
 import { ValidateObjectId } from "../shared/validate-object-id.pipes";
 import { CreateGroupDTO } from './dto/create-group.dto';
+import { StatService } from "../ledge/stat.service";
 
 @Controller('group')
 export class GroupController {
-    constructor(private readonly groupService: GroupService) { }
+    constructor(
+        private readonly groupService: GroupService,
+        private readonly statService: StatService
+    ) { }
     private readonly logger = new Logger();
 
     @Get()
@@ -40,10 +44,25 @@ export class GroupController {
         // this.logger.log(groupIn)
         const res = await this.groupService.createGroup(groupIn);
         if (!res) throw new HttpException('create failed', HttpStatus.FORBIDDEN);
+        let moneyUpload = 0;    
+        if (group.list !== '') {
+            moneyUpload = 0;
+            for (let i = 0; i < groupIn.list.length; i++) {
+                let moneyRes = await this.statService.getUserStatByUserId(groupIn.list[i]);
+                moneyUpload += moneyRes[moneyRes.length - 1]['money'];
+            }
+        }
+        const stat = await this.statService.createGroupStat({
+            groupId: res._id,
+            money: moneyUpload,
+            message: 'create group and create group stat',
+            date: new Date()
+        });
         return response.status(HttpStatus.OK).json({
             status: 1,
             message: 'create group successfully!',
-            data: res
+            data: res,
+            stat: stat
         })
     }
 

@@ -7,4 +7,5 @@ export class CreateLedgeDTO {
     tag: string[];
     category: string;
     star: boolean;
+    date: Date;
 }

@@ -1,10 +1,11 @@
 import { Controller, Post, Res, Body, HttpStatus, Get, Delete, Query, HttpException } from '@nestjs/common';
 import { UserService } from './user.service';
+import { StatService } from "../ledge/stat.service";
 import { CreateUserDTO, LoginUserDTO } from './dto/create-user.dto';
 
 @Controller('user')
 export class UserController {
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService, private statService: StatService) { }
 
     @Get()
     async getUserList(@Res() res) {
@@ -30,10 +31,17 @@ export class UserController {
     @Post('register')
     async register(@Res() res, @Body() CreateUserDTO: CreateUserDTO) {
         const newUser = await this.userService.register(CreateUserDTO);
+        const statRes = await this.statService.createUserStat({
+            userId: newUser._id as string,
+            money: 0,
+            message: 'init user stat',
+            date: new Date()
+        });
         return res.status(HttpStatus.OK).json({
             status: 1,
             message: 'User has been submitted successfully!',
             data: newUser,
+            stat: statRes
         });
     }
 

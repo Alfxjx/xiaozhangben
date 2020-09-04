@@ -3,6 +3,7 @@ import {
   NestModule,
   MiddlewareConsumer,
   RequestMethod,
+  forwardRef,
 } from '@nestjs/common';
 import { LedgeController } from './ledge.controller';
 import { LedgeService } from './ledge.service';
@@ -12,6 +13,7 @@ import { LedgeSchema } from "./schemas/ledge.schema";
 import { UserStatSchema, GroupStatSchema } from "./schemas/stat.schema";
 import { AuthMiddleware } from "../shared/auth.middleware";
 import { UserModule } from "../user/user.module";
+import { GroupModule } from "../group/group.module";
 
 @Module({
   imports: [
@@ -20,10 +22,12 @@ import { UserModule } from "../user/user.module";
       { name: 'UserStat', schema: UserStatSchema },
       { name: 'GroupStat', schema: GroupStatSchema }
     ]),
-    UserModule
+    forwardRef(() => UserModule),
+    forwardRef(() => GroupModule)
   ],
   controllers: [LedgeController],
-  providers: [LedgeService, StatService]
+  providers: [LedgeService, StatService],
+  exports: [StatService]
 })
 
 // export class LedgeModule implements NestModule {
